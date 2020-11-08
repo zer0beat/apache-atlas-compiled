@@ -25,7 +25,7 @@ jobs:
           compiled=$(cat ./apache-atlas-compiled/compiled)
           versions=$(wget -qO- https://archive.apache.org/dist/atlas/ | grep -E "\[DIR" | sed "s#\(.*DIR.*href=\"\)\(.*\)/\"\(.*\)#\2#g" | grep -v "${compiled}" || echo "none")
           if [[ "${versions}" == "none" ]]; then
-            matrix="{}"
+            matrix="none"
           else
             matrix=$(jq -cRn '[inputs as $version | $version] | { build: [{suffix: "", profile: "dist"}, {suffix: "-dev", profile: "dist,embedded-hbase-solr"}], version: . }' <<<"$versions")
           fi
@@ -33,6 +33,7 @@ jobs:
   
   build:
     name: Build Apache Atlas ${{ matrix.version }} with profile ${{ matrix.build.profile }}
+    if: ${{ needs.discover-new-releases.outputs.matrix != 'none' }}
     strategy:
       fail-fast: false
       matrix: ${{ fromJson(needs.discover-new-releases.outputs.matrix) }}
