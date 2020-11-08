@@ -23,8 +23,12 @@ jobs:
         id: discover-releases
         run: |
           compiled=$(cat ./apache-atlas-compiled/compiled)
-          versions=$(wget -qO- https://archive.apache.org/dist/atlas/ | grep -E "\[DIR" | sed "s#\(.*DIR.*href=\"\)\(.*\)/\"\(.*\)#\2#g" | grep -v "${compiled}")
-          matrix=$(jq -cRn '[inputs as $version | $version] | { build: [{suffix: "", profile: "dist"}, {suffix: "-dev", profile: "dist,embedded-hbase-solr"}], version: . }' <<<"$versions")
+          versions=$(wget -qO- https://archive.apache.org/dist/atlas/ | grep -E "\[DIR" | sed "s#\(.*DIR.*href=\"\)\(.*\)/\"\(.*\)#\2#g" | grep -v "${compiled}" || echo "none")
+          if [[ "${versions}" == "none" ]]; then
+            matrix="{}"
+          else
+            matrix=$(jq -cRn '[inputs as $version | $version] | { build: [{suffix: "", profile: "dist"}, {suffix: "-dev", profile: "dist,embedded-hbase-solr"}], version: . }' <<<"$versions")
+          fi
           echo "::set-output name=matrix::$matrix"
   
   build:
