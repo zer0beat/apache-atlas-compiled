@@ -15,7 +15,7 @@ jobs:
       matrix: ${{ steps.discover-releases.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
         with:
           path: apache-atlas-compiled
 
@@ -91,7 +91,7 @@ jobs:
           done
 
       - name: Checkout Apache Atlas compiled
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
         with:
           path: apache-atlas-compiled
 
