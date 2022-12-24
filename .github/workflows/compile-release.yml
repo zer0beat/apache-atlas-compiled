@@ -30,7 +30,7 @@ jobs:
           else
             matrix=$(jq -cRn '[inputs as $version | $version] | { build: [{suffix: "", profile: "dist"}, {suffix: "-dev", profile: "dist,embedded-hbase-solr"}], version: . }' <<<"$versions")
           fi
-          echo "::set-output name=matrix::$matrix"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
   
   build:
     name: Build Apache Atlas ${{ matrix.version }} with profile ${{ matrix.build.profile }}
