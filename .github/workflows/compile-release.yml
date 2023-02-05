@@ -41,6 +41,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: discover-new-releases
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3.2.0
+        with:
+          path: apache-atlas-compiled
+
       - name: Download Apache Atlas ${{ matrix.version }}
         id: download-atlas 
         run: |
@@ -50,6 +55,14 @@ jobs:
           gpg --import atlas-KEYS
           gpg --verify apache-atlas.tar.gz.asc apache-atlas.tar.gz
           tar zxf apache-atlas.tar.gz
+
+      - name: Patch Apache Atlas ${{ matrix.version }}
+        id: patch-atlas 
+        run: |
+          ls -la
+          if [[ -f "apache-atlas-compiled/patches/${{ matrix.version }}.sh" ]]; then
+            apache-atlas-compiled/patches/${{ matrix.version }}.sh "$(pwd)/apache-atlas-sources-${{ matrix.version }}"
+          fi
 
       - name: Set up JDK 1.8
         uses: actions/setup-java@v3.9.0
