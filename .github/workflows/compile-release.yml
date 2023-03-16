@@ -16,7 +16,7 @@ jobs:
       matrix: ${{ steps.discover-releases.outputs.matrix }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.2.0
+        uses: actions/checkout@v3.4.0
         with:
           path: apache-atlas-compiled
 
@@ -42,7 +42,7 @@ jobs:
     needs: discover-new-releases
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.2.0
+        uses: actions/checkout@v3.4.0
         with:
           path: apache-atlas-compiled
 
@@ -106,7 +106,7 @@ jobs:
           done
 
       - name: Checkout Apache Atlas compiled
-        uses: actions/checkout@v3.2.0
+        uses: actions/checkout@v3.4.0
         with:
           path: apache-atlas-compiled
 
